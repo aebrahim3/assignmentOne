@@ -46,7 +46,7 @@ app.get('/test-db', async (req, res) => {
 app.use(express.urlencoded({extended: false}));
 
 var mongoStore = MongoStore.create({
-	mongoUrl: `mongodb+srv://${aebrahim3}:${Chaoskingdom4567}@${cluster0.r5s1gnr}/sessions`,
+	mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/sessions`,
 	crypto: {
 		secret: mongodb_session_secret
 	}
