@@ -232,7 +232,7 @@ app.get('/logout', (req,res) => {
 });
 
 
-/**app.get('/cat/:id', (req,res) => {
+app.get('/cat/:id', (req,res) => {
 
     var cat = req.params.id;
 
@@ -247,8 +247,6 @@ app.get('/logout', (req,res) => {
     }
 });
 
-**/
-
 
 //app.use(express.static(__dirname + "/public"));
 
@@ -257,7 +255,7 @@ app.get("*", (req,res) => {
 	res.send("Page not found - 404");
 })
 
-(async () => {
+;(async () => {
     try {
         const count = await userCollection.countDocuments();
         console.log(`✅ MongoDB connected: Users collection has ${count} documents.`);
