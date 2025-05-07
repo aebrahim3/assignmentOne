@@ -8,7 +8,7 @@ const MongoStore = require('connect-mongo');
 const bcrypt = require('bcrypt');
 const saltRounds = 12;
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 const app = express();
 
@@ -30,6 +30,7 @@ const node_session_secret = process.env.NODE_SESSION_SECRET;
 var {database} = include('databaseConnection');
 
 const userCollection = database.db(mongodb_database).collection('users');
+//`<input type="text" name="username" id="username"/>`
 
 app.get('/test-db', async (req, res) => {
     try {
@@ -126,11 +127,12 @@ app.post('/submitEmail', (req,res) => {
 });
 
 
-app.get('/createUser', (req,res) => {
+app.get('/signup', (req,res) => {
     var html = `
     create user
-    <form action='/submitUser' method='post'>
+    <form action='/signupSubmit' method='post'>
     <input name='username' type='text' placeholder='username'>
+    <input name='email' type='text' placeholder='email'>
     <input name='password' type='password' placeholder='password'>
     <button>Submit</button>
     </form>
@@ -151,20 +153,22 @@ app.get('/login', (req,res) => {
     res.send(html);
 });
 
-app.post('/submitUser', async (req,res) => {
+app.post('/signupSubmit', async (req,res) => {
     var username = req.body.username;
+    var email = req.body.email;
     var password = req.body.password;
 
 	const schema = Joi.object(
 		{
 			username: Joi.string().alphanum().max(20).required(),
+            email: Joi.string().max(20).required(),
 			password: Joi.string().max(20).required()
 		});
-	
-	const validationResult = schema.validate({username, password});
+
+	const validationResult = schema.validate({username, email, password});
 	if (validationResult.error != null) {
 	   console.log(validationResult.error);
-	   res.redirect("/createUser");
+	   res.redirect("/signup");
 	   return;
    }
 
@@ -179,6 +183,7 @@ app.post('/submitUser', async (req,res) => {
 
 app.post('/loggingin', async (req,res) => {
     var username = req.body.username;
+    var email = req.body.email;
     var password = req.body.password;
 
 	const schema = Joi.string().max(20).required();
@@ -189,7 +194,7 @@ app.post('/loggingin', async (req,res) => {
 	   return;
 	}
 
-	const result = await userCollection.find({username: username}).project({username: 1, password: 1, _id: 1}).toArray();
+	const result = await userCollection.find({username: username}).project({username: 1, email: 1, password: 1, _id: 1}).toArray();
 
 	console.log(result);
 	if (result.length != 1) {
@@ -214,14 +219,42 @@ app.post('/loggingin', async (req,res) => {
 });
 
 app.get('/loggedin', (req,res) => {
+    var username = req.session.user;
     if (!req.session.authenticated) {
         res.redirect('/login');
     }
     var html = `
-    You are logged in!
+    Hello ` <username>  `
+    <ul>
+    <li><button class="press">Go to Members Area</button></li>
+    <li><button class="alsopress">Log out</button></li>
+    </ul>
     `;
+    document.querySelector("press").addEventListener("click",
+        function() {
+            res.redirect('/members');
+        }
+    )
+    document.querySelector("alsopress").addEventListener("click", 
+        function() {
+            res.redirect('/logout')
+        }
+    )
     res.send(html);
 });
+
+app.get('/members', (req,res) => {
+    var username = req.session.user;
+    var html = `Hello,` <username> 
+     res.send("<img src='/public/image1' style='width:250px;'>");
+    `<button class="logout"> Sign out</button>`;
+    document.querySelector("logout").addEventListener("click",
+      function() {
+        res.redirect('/logout');
+      }  
+    )
+  res.send(html);
+})
 
 app.get('/logout', (req,res) => {
 	req.session.destroy();
