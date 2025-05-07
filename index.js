@@ -46,7 +46,7 @@ app.get('/test-db', async (req, res) => {
 app.use(express.urlencoded({extended: false}));
 
 var mongoStore = MongoStore.create({
-	mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/sessions`,
+	mongoUrl: `mongodb+srv://${aebrahim3}:${Chaoskingdom4567}@${cluster0.r5s1gnr}/sessions`,
 	crypto: {
 		secret: mongodb_session_secret
 	}
@@ -232,7 +232,7 @@ app.get('/logout', (req,res) => {
 });
 
 
-app.get('/cat/:id', (req,res) => {
+/** app.get('/cat/:id', (req,res) => {
 
     var cat = req.params.id;
 
@@ -248,7 +248,8 @@ app.get('/cat/:id', (req,res) => {
 });
 
 
-//app.use(express.static(__dirname + "/public"));
+app.use(express.static(__dirname + "/public"));
+**/
 
 app.get("*", (req,res) => {
 	res.status(404);
