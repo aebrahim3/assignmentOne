@@ -232,7 +232,7 @@ app.get('/logout', (req,res) => {
 });
 
 
-app.get('/cat/:id', (req,res) => {
+/**app.get('/cat/:id', (req,res) => {
 
     var cat = req.params.id;
 
@@ -247,8 +247,10 @@ app.get('/cat/:id', (req,res) => {
     }
 });
 
+**/
 
-app.use(express.static(__dirname + "/public"));
+
+//app.use(express.static(__dirname + "/public"));
 
 app.get("*", (req,res) => {
 	res.status(404);
